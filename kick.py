@@ -46,5 +46,10 @@ for x in range(1,options.number+1):
     hostname = "training-%03d" % (x,)
     print "Kicking host %s" % (hostname, )
     
-    rc_local='#!/bin/sh -e\n#\n# rc.local.  Exit with exit 0\n#\n/root/install.sh'
-    root_install='#!/bin/bash\ncurl -skS http://github.com/rpedde/swift-training-kick/raw/master/install.sh\nsed -i /etc/rc.local -e s_/root/install.sh_exit 0_'
+    crond="* * * * * root /bin/bash /root/install.sh\n"
+    root_install='#!/bin/bash\nrm -f /etc/cron.d/firstboot\napt-get install -y curl\ncurl -skS https://github.com/rpedde/swift-training-kick/raw/master/install.sh | /bin/bash\n\n'
+
+    cs.servers.create(hostname, image.id, flavor.id, files = {
+            "/etc/cron.d/firstboot": crond,
+            "/root/install.sh": root_install })
+
