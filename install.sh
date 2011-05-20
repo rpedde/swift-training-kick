@@ -19,7 +19,10 @@ for srv in proxy01 storage0{1..3}; do
 done >> /etc/hosts
 
 # Installed required packages
-apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi iscsitarget open-iscsi-utils
+apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi open-iscsi-utils iscsitarget-dkms linux-headers-2.6.32-305-ec2 gawk
+
+# build the iscsi dkms package
+dkms build -m iscsi -v 1.4.20.2
 
 # Add a new bridge for LXC, including NAT rule
 (
