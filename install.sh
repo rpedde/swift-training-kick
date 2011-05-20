@@ -19,7 +19,10 @@ for srv in proxy01 storage0{1..3}; do
 done >> /etc/hosts
 
 # Installed required packages
-apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi open-iscsi-utils iscsitarget-dkms linux-headers-2.6.32-305-ec2 gawk
+apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi open-iscsi-utils iscsitarget-dkms linux-headers-`uname -r` gawk
+
+# fix up missing asm-offsets.h
+ln -nsf /usr/src/linux-headers-`uname -r`/include/asm-x86 /usr/src/linux-headers-`uname -r`/include/asm
 
 # build the iscsi dkms package
 dkms build -m iscsi -v 1.4.20.2
