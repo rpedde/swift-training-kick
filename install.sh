@@ -150,3 +150,6 @@ echo 'ISCSITARGET_ENABLE=true' > /etc/default/iscsitarget
 perl -pi -e 's/^node.startup = manual/node.startup = automatic/;' /etc/iscsi/iscsid.conf
 
 iscsiadm -m discovery -t st -p 127.0.0.1
+
+/etc/init.d/open-iscsi restart
+
