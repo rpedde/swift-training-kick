@@ -20,7 +20,7 @@ if [ ! -e /root/.ssh/authorized_keys ]; then
     cat > /root/.ssh/authorized_keys <<EOF
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDD6BZiV4WdZRhF1TWW1ywvnvYp9gguRI4NMYZP6F5SbOshB08LuDn2A7aeeBrW5Xphbmx8O02sL3Tn1kw6fdYvdjNOqHZgMJyblWABuUc8ZHDlS72hBXxtqu2pcyJ6GOeJZWyNurdBsRm+YQtZ+/gHKm36fUot8UC0quJYPmJJ1FzymKd0aT5lbixR6p00Bx+I+He+XiPbwVe2A3JN04dvOPlcp9kQDhdADXdMS9qgR1X9HVgZ91hbm9ng4emdzT4xqD73vAKwngGgkNNaICNoartH9ck1pplOkvij36suJyU55rTBy5HKSiLIOpVoq/RePHjmVidIuWNtjxBDOtLh rpedde@dell-laptop
 EOF
-    chmod -R ow-rwx /root/.ssh
+    chmod -R oa-rwx /root/.ssh
 fi
 
 
@@ -43,7 +43,7 @@ if [ ! -e /usr/src/linux-headers-`uname -r`/include/asm ]; then
 fi
 
 # Installed required packages
-apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi open-iscsi-utils iscsitarget-dkms
+apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi open-iscsi-utils iscsitarget-dkms iscsitarget
 
 # Add a new bridge for LXC, including NAT rule
 if ( ! grep -q "br-lxc" /etc/network/interfaces ); then
@@ -93,9 +93,10 @@ h=11
 g=1
 l=1
 for srv in {proxy01,storage0{1..3}}; do
-    if [ ! -e $LXCDIR/$srv ]; then
-	ROOT=$LXCDIR/$srv/rootfs
-	lxc-create -n $srv -t ubuntu -f /etc/lxc/network.conf
+    ROOT=${LXCDIR}/${srv}/rootfs
+
+    if [ ! -e ${LXCDIR}/${srv} ]; then
+	lxc-create -n ${srv} -t ubuntu -f /etc/lxc/network.conf
     fi
 
     cat > $ROOT/etc/network/interfaces <<EOF
@@ -111,7 +112,6 @@ EOF
 
   rm -f $ROOT/etc/resolv.conf
   echo "nameserver 192.168.254.1" > $ROOT/etc/resolv.conf
-
 done
 
 
