@@ -5,7 +5,8 @@ set +x
 exec >/tmp/firstboot.local
 exec 2>&1
 
-touch /tmp/foo
+export PATH=/bin:/usr/bin:/usr/sbin:/sbin
+
 #many parts of this flagrantly stolen from http://www.stgraber.org/2011/05/04/state-of-lxc-in-ubuntu-natty/
 
 # set up /etc/hosts for dns resolution
@@ -18,7 +19,7 @@ for srv in proxy01 storage0{1..3}; do
 done >> /etc/hosts
 
 # Installed required packages
-apt-get install lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi iscsitarget open-iscsi-utils
+apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi iscsitarget open-iscsi-utils
 
 # Add a new bridge for LXC, including NAT rule
 (
@@ -37,6 +38,7 @@ iface br-lxc inet static
 
     bridge_ports none
     bridge_stp off
+    bridge_fd 0
 EOF
 ) >> /etc/network/interfaces
 ifup br-lxc
