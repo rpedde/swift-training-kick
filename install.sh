@@ -18,11 +18,13 @@ for srv in proxy01 storage0{1..3}; do
   i=$[ i + 1 ]
 done >> /etc/hosts
 
+apt-get install -y  linux-headers-`uname -r` gawk
+ln -nsf /usr/src/linux-headers-`uname -r`/include/asm-x86 /usr/src/linux-headers-`uname -r`/include/asm
+
 # Installed required packages
-apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi open-iscsi-utils iscsitarget-dkms linux-headers-`uname -r` gawk
+apt-get install -y lxc debootstrap bridge-utils dnsmasq dnsmasq-base loop-aes-utils libcap2-bin sharutils open-iscsi open-iscsi-utils iscsitarget-dkms
 
 # fix up missing asm-offsets.h
-ln -nsf /usr/src/linux-headers-`uname -r`/include/asm-x86 /usr/src/linux-headers-`uname -r`/include/asm
 
 # build the iscsi dkms package
 dkms build -m iscsi -v 1.4.20.2
@@ -89,6 +91,9 @@ iface eth0 inet static
     gateway $n.$g
 EOF
   )
+  rm $ROOT/etc/resolv.conf
+  echo "nameserver 192.168.254.1" > $ROOT/etc/resolv.conf
+
 done
 
 
