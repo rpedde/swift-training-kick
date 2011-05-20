@@ -62,6 +62,29 @@ EOF
 ) > /etc/lxc/network.conf
 
 #download and extract containers
+#container creation
+LXCDIR=/var/lib/lxc
+n=192.168.254
+h=11
+g=1
+l=1
+for srv in {proxy01,storage0{1..3}}; do
+  ROOT=$LXCDIR/$srv/rootfs
+  lxc-create -n $srv -t ubuntu -f /etc/lxc/network.conf
+  (
+  cat <<EOF > $ROOT/etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+    address $n.$h
+    netmask 255.255.255.0
+    gateway $n.$g
+EOF
+  )
+done
+
 
 #configure shared directory in containers
 mkdir /var/lib/lxc/{proxy01,storage0{1..3}}/rootfs/shared
