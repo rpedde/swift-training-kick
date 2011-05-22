@@ -9,10 +9,11 @@ fi
 exec >/tmp/firstboot.local
 exec 2>&1
 
+LXCDIR=/var/lib/lxc
+
 export PATH=/bin:/usr/bin:/usr/sbin:/sbin
 
 #many parts of this flagrantly stolen from http://www.stgraber.org/2011/05/04/state-of-lxc-in-ubuntu-natty/
-
 
 # set up ssh key -- REPLACE THIS WITH YOUR KEY
 if [ ! -e /root/.ssh/authorized_keys ]; then
@@ -87,11 +88,9 @@ EOF
 
 #download and extract containers
 #container creation
-LXCDIR=/var/lib/lxc
 n=192.168.254
 h=11
 g=1
-l=1
 for srv in {proxy01,storage0{1..3}}; do
     ROOT=${LXCDIR}/${srv}/rootfs
 
@@ -110,6 +109,7 @@ iface eth0 inet static
     gateway $n.$g
 EOF
 
+  h=$((h+1))
   rm -f $ROOT/etc/resolv.conf
   echo "nameserver 192.168.254.1" > $ROOT/etc/resolv.conf
 done
@@ -153,3 +153,52 @@ iscsiadm -m discovery -t st -p 127.0.0.1
 
 /etc/init.d/open-iscsi restart
 
+for srv in storage0{1..3}; do
+    ROOT=${LXCDIR}/${srv}/rootfs
+    rm -f ${ROOT}/dev/sd{a,b}
+done
+
+# dummy up devices -- this is kind of rude
+mknod ${LXCDIR}/storage01/rootfs/dev/sda b 8 0  # /dev/sda
+mknod ${LXCDIR}/storage01/rootfs/dev/sdb b 8 16 # /dev/sdb
+if ( ! grep -q "b 8:0" ${LXCDIR}/storage01/config ); then
+    cat >> ${LXCDIR}/storage01/config <<EOF
+# /dev/sd{a,b}
+lxc.cgroup.devices.allow = b 8:0 rwm
+lxc.cgroup.devices.allow = b 8:16 rwm
+EOF
+fi
+
+mknod ${LXCDIR}/storage02/rootfs/dev/sda b 8 32 # /dev/sdc
+mknod ${LXCDIR}/storage02/rootfs/dev/sdb b 8 48 # /dev/sdd
+if ( ! grep -q "b 8:32" ${LXCDIR}/storage02/config ); then
+    cat >> ${LXCDIR}/storage02/config <<EOF
+# /dev/sd{a,b}
+lxc.cgroup.devices.allow = b 8:32 rwm
+lxc.cgroup.devices.allow = b 8:48 rwm
+EOF
+fi
+
+mknod ${LXCDIR}/storage03/rootfs/dev/sda b 8 64 # /dev/sde
+mknod ${LXCDIR}/storage03/rootfs/dev/sdb b 8 80 # /dev/sdf
+if ( ! grep -q "b 8:64" ${LXCDIR}/storage03/config ); ten
+    cat >> ${LXCDIR}/storage03/config <<EOF
+# /dev/sd{a,b}
+lxc.cgroup.devices.allow = b 8:64 rwm
+lxc.cgroup.devices.allow = b 8:80 rwm
+EOF
+fi
+
+# Make the lxc containers autostart
+cat > /etc/default/lxc <<EOF
+RUN=yes
+CONF_DIR=/etc/lxc
+CONTAINERS="proxy01 storage01 storage02 storage03"
+EOF
+
+# Fix up iptables
+cat > /etc/firewall.conf <<EOF
+EOF
+
+# fix up ssh
+for srv in ${LXCDIR}
