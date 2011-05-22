@@ -201,7 +201,7 @@ cat > /etc/firewall.conf <<EOF
 EOF
 
 # add a swift user
-for srv in ${LXCDIR}; do
+for srv in proxy01 storage0{1..3}; do
     if ( ! grep -q "swift" ${LXCDIR}/${srv}/rootfs/etc/passwd ); then
 	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "adduser --system --home /shared --shell /bin/bash --no-create-home swift"
     fi
