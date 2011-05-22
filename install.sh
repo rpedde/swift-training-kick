@@ -200,5 +200,9 @@ EOF
 cat > /etc/firewall.conf <<EOF
 EOF
 
-# fix up ssh
-for srv in ${LXCDIR}
+# add a swift user
+for srv in ${LXCDIR}; do
+    if ( ! grep -q "swift" ${LXCDIR}/${srv}/rootfs/etc/passwd ); then
+	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "adduser --system --home /shared --shell /bin/bash --no-create-home swift"
+    fi
+done
