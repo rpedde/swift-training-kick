@@ -181,7 +181,7 @@ fi
 
 mknod ${LXCDIR}/storage03/rootfs/dev/sda b 8 64 # /dev/sde
 mknod ${LXCDIR}/storage03/rootfs/dev/sdb b 8 80 # /dev/sdf
-if ( ! grep -q "b 8:64" ${LXCDIR}/storage03/config ); ten
+if ( ! grep -q "b 8:64" ${LXCDIR}/storage03/config ); then
     cat >> ${LXCDIR}/storage03/config <<EOF
 # /dev/sd{a,b}
 lxc.cgroup.devices.allow = b 8:64 rwm
