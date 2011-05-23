@@ -127,7 +127,7 @@ done
 
 #make "disks" for lxc containers
 mkdir -p /var/lib/swift
-for f in disk{1..6}; do 
+for f in disk{1..7}; do 
     if [ ! -e /var/lib/swift/$f ]; then
 	dd if=/dev/zero of=/var/lib/swift/$f count=0 bs=1024 seek=1000000
     fi
@@ -135,7 +135,7 @@ done
 
 #configure iscsi to expose disks to localhost
 > /etc/iet/ietd.conf
-for i in {1..6}; do
+for i in {1..7}; do
     if ( ! grep -iq "storage\.disk$i" /etc/iet/ietd.conf ); then
 	echo "Target iqn.2011-05.swift.storage:storage.disk$i" >> /etc/iet/ietd.conf
 	echo "    Lun 0 Path=/var/lib/swift/disk$i,Type=fileio" >> /etc/iet/ietd.conf
@@ -155,49 +155,49 @@ iscsiadm -m discovery -t st -p 127.0.0.1
 
 for srv in storage0{1..3}; do
     ROOT=${LXCDIR}/${srv}/rootfs
-    rm -f ${ROOT}/dev/sd{a,b}
+    rm -f ${ROOT}/dev/sd{b,c}
 done
 
 # dummy up devices -- this is kind of rude
-mknod ${LXCDIR}/storage01/rootfs/dev/sda b 8 0  # /dev/sda
-mknod ${LXCDIR}/storage01/rootfs/dev/sda1 b 8 1  # /dev/sda1
-mknod ${LXCDIR}/storage01/rootfs/dev/sdb b 8 16 # /dev/sdb
-mknod ${LXCDIR}/storage01/rootfs/dev/sdb b 8 17 # /dev/sdb1
-if ( ! grep -q "b 8:0" ${LXCDIR}/storage01/config ); then
+mknod ${LXCDIR}/storage01/rootfs/dev/sdb b 8 16  # /dev/sdb
+mknod ${LXCDIR}/storage01/rootfs/dev/sdb1 b 8 17  # /dev/sdb1
+mknod ${LXCDIR}/storage01/rootfs/dev/sdc b 8 32 # /dev/sdc
+mknod ${LXCDIR}/storage01/rootfs/dev/sdc1 b 8 33 # /dev/sdc1
+if ( ! grep -q "b 8:16" ${LXCDIR}/storage01/config ); then
     cat >> ${LXCDIR}/storage01/config <<EOF
 # /dev/sd{a,b}
-lxc.cgroup.devices.allow = b 8:0 rwm
-lxc.cgroup.devices.allow = b 8:1 rwm
 lxc.cgroup.devices.allow = b 8:16 rwm
 lxc.cgroup.devices.allow = b 8:17 rwm
+lxc.cgroup.devices.allow = b 8:32 rwm
+lxc.cgroup.devices.allow = b 8:33 rwm
 EOF
 fi
 
-mknod ${LXCDIR}/storage02/rootfs/dev/sda b 8 32 # /dev/sdc
-mknod ${LXCDIR}/storage02/rootfs/dev/sda b 8 33 # /dev/sdc1
 mknod ${LXCDIR}/storage02/rootfs/dev/sdb b 8 48 # /dev/sdd
-mknod ${LXCDIR}/storage02/rootfs/dev/sdb b 8 49 # /dev/sdd1
+mknod ${LXCDIR}/storage02/rootfs/dev/sdb1 b 8 49 # /dev/sdd1
+mknod ${LXCDIR}/storage02/rootfs/dev/sdc b 8 64 # /dev/sde
+mknod ${LXCDIR}/storage02/rootfs/dev/sdc1 b 8 65 # /dev/sde1
 if ( ! grep -q "b 8:32" ${LXCDIR}/storage02/config ); then
     cat >> ${LXCDIR}/storage02/config <<EOF
 # /dev/sd{a,b}
-lxc.cgroup.devices.allow = b 8:32 rwm
-lxc.cgroup.devices.allow = b 8:33 rwm
 lxc.cgroup.devices.allow = b 8:48 rwm
 lxc.cgroup.devices.allow = b 8:49 rwm
+lxc.cgroup.devices.allow = b 8:64 rwm
+lxc.cgroup.devices.allow = b 8:65 rwm
 EOF
 fi
 
-mknod ${LXCDIR}/storage03/rootfs/dev/sda b 8 64 # /dev/sde
-mknod ${LXCDIR}/storage03/rootfs/dev/sda b 8 65 # /dev/sde1
 mknod ${LXCDIR}/storage03/rootfs/dev/sdb b 8 80 # /dev/sdf
-mknod ${LXCDIR}/storage03/rootfs/dev/sdb b 8 81 # /dev/sdf
+mknod ${LXCDIR}/storage03/rootfs/dev/sda1 b 8 81 # /dev/sdf1
+mknod ${LXCDIR}/storage03/rootfs/dev/sdc b 8 96 # /dev/sdg
+mknod ${LXCDIR}/storage03/rootfs/dev/sdc1 b 8 97 # /dev/sdg
 if ( ! grep -q "b 8:64" ${LXCDIR}/storage03/config ); then
     cat >> ${LXCDIR}/storage03/config <<EOF
 # /dev/sd{a,b}
-lxc.cgroup.devices.allow = b 8:64 rwm
-lxc.cgroup.devices.allow = b 8:65 rwm
 lxc.cgroup.devices.allow = b 8:80 rwm
 lxc.cgroup.devices.allow = b 8:81 rwm
+lxc.cgroup.devices.allow = b 8:96 rwm
+lxc.cgroup.devices.allow = b 8:97 rwm
 EOF
 fi
 
@@ -236,6 +236,11 @@ for srv in proxy01 storage0{1..3}; do
     if [ ! -e ${LXCDIR}/${srv}/rootfs/usr/bin/dsh ]; then
 	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "apt-get install -y dsh"
     fi
+
+    if [ ! -e ${LXCDIR}/${srv}/rootfs/usr/sbin/rsyslogd ]; then
+	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "apt-get install -y rsyslog"
+    fi
+
 
     # add a swift user
     PWHASH=`echo "Swift^pw" | makepasswd --clearfrom=- --crypt-md5 | awk '{print $2}'`
