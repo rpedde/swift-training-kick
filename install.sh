@@ -188,7 +188,7 @@ EOF
 fi
 
 mknod ${LXCDIR}/storage03/rootfs/dev/sdb b 8 80 # /dev/sdf
-mknod ${LXCDIR}/storage03/rootfs/dev/sda1 b 8 81 # /dev/sdf1
+mknod ${LXCDIR}/storage03/rootfs/dev/sdb1 b 8 81 # /dev/sdf1
 mknod ${LXCDIR}/storage03/rootfs/dev/sdc b 8 96 # /dev/sdg
 mknod ${LXCDIR}/storage03/rootfs/dev/sdc1 b 8 97 # /dev/sdg
 if ( ! grep -q "b 8:64" ${LXCDIR}/storage03/config ); then
