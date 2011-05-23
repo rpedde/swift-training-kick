@@ -246,7 +246,7 @@ for srv in proxy01 storage0{1..3}; do
     PWHASH=`echo "Swift^pw" | makepasswd --clearfrom=- --crypt-md5 | awk '{print $2}'`
 
     if ( ! grep -q "swift" ${LXCDIR}/${srv}/rootfs/etc/passwd ); then
-	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "adduser --system --home /shared --shell /bin/bash --no-create-home swift"
+	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "adduser --system --home=/shared --shell=/bin/bash --no-create-home --uid=500 swift"
     fi
     chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "usermod -p '${PWHASH}' swift"
 
@@ -274,8 +274,8 @@ echo "Doing keyscan"
 ssh-keyscan -t rsa proxy01 storage0{1..3} > ${LXCDIR}/shared/.ssh/known_hosts
 
 echo "Setting up ssh and dsh"
-chown -R 102 ${LXCDIR}/shared
-chown -R 102 ${LXCDIR}/shared/.ssh
+chown -R 500 ${LXCDIR}/shared
+chown -R 500 ${LXCDIR}/shared/.ssh
 chmod go-rwx ${LXCDIR}/shared/.ssh
 
 mkdir -p ${LXCDIR}/shared/.dsh/group
@@ -289,7 +289,7 @@ echo "proxy01" > ${LXCDIR}/shared/.dsh/group/proxy
 
 cat ${LXCDIR}/shared/.dsh/group/* > ${LXCDIR}/shared/.dsh/group/all
 
-chown -R 102 ${LXCDIR}/shared/.dsh
+chown -R 500 ${LXCDIR}/shared/.dsh
 
 # echo "Stopping containers"
 # for srv in proxy01 storage0{1..3}; do
