@@ -261,9 +261,7 @@ if [ ! -e ${LXCDIR}/shared/.ssh/id_rsa ]; then
 fi
 
 echo "Starting LXC containers"
-for srv in proxy01 storage0{1..3}; do
-    lxc-start -n ${srv} -d
-done
+/etc/init.d/lxc restart
 
 sleep 10
 
@@ -271,6 +269,7 @@ echo "Doing keyscan"
 ssh-keyscan -t rsa proxy01 storage0{1..3} > ${LXCDIR}/shared/.ssh/known_hosts
 
 echo "Setting up ssh and dsh"
+chown -R 102 ${LXCDIR}/shared
 chown -R 102 ${LXCDIR}/shared/.ssh
 chmod go-rwx ${LXCDIR}/shared/.ssh
 
