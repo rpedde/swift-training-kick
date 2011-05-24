@@ -208,35 +208,8 @@ dsh -c -g storage cp ~/{object,account,container}-server.conf /etc/swift
 # and start the storage nodes
 dsh -c -g storage sudo swift-init all start
 
-# the storage node is now set up.  Next steps:  create users and test
+# initialize the auth system
 swauth-prep -A http://localhost:8080/auth/ -K swauthkey
-swauth-add-user -A http://localhost:8080/auth/ -K swauthkey -a system root testpass
 
-# verify that the user works...
-sudo apt-get install -y curl
-curl -k -v -H 'X-Storage-User: system:root' -H 'X-Storage-Pass:testpass' http://localhost:8080/auth/v1.0
-
-# pull the X-Auth-Token and X-Storage-URL out
-curl -k -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
-
-# This is the same as the st command "stat"
-st -A http://localhost:8080/auth/v1.0 -U system:root -K testpass stat
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# the storage node is now set up.  Next steps:  create users and test
+# We'll do that as the next exercise.

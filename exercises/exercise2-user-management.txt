@@ -1,0 +1,20 @@
+# add an admin user for a new account
+swauth-add-user -A http://localhost:8080/auth/ -K swauthkey -a testaccount test1 test1pass
+
+# add a non-admin account
+swauth-add-user -A http://localhost:8080/auth/ -K swauthkey testaccount test2 test2pass
+
+# check that swauth now knows about the user and account
+swauth-list -A http://localhost:8080/auth/ -K swauthkey testaccount
+
+# verify that the user works...
+sudo apt-get install -y curl
+curl -k -v -H 'X-Storage-User: testaccount:test1' -H 'X-Storage-Pass:test1pass' http://localhost:8080/auth/v1.0
+
+# pull the X-Auth-Token and X-Storage-URL out
+curl -k -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
+
+# This is the same as the st command "stat"
+st -A http://localhost:8080/auth/v1.0 -U testaccount:test1 -K test1pass stat
+
+
