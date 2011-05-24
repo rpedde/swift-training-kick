@@ -30,7 +30,7 @@ if ( ! grep -iq "192\.168\.254\.11" /etc/hosts ); then
     echo >> /etc/hosts
     echo '#swift lab hosts' >> /etc/hosts
     i=11
-    for srv in proxy01 storage0{1..3}; do 
+    for srv in proxy01 storage0{1..4}; do 
 	echo 192.168.254.$i $srv $srv.swift
 	i=$[ i + 1 ]
     done >> /etc/hosts
@@ -91,7 +91,7 @@ EOF
 n=192.168.254
 h=11
 g=1
-for srv in {proxy01,storage0{1..3}}; do
+for srv in {proxy01,storage0{1..4}}; do
     ROOT=${LXCDIR}/${srv}/rootfs
 
     if [ ! -e ${LXCDIR}/${srv} ]; then
@@ -116,10 +116,10 @@ done
 
 
 #configure shared directory in containers
-mkdir -p /var/lib/lxc/{proxy01,storage0{1..3}}/rootfs/shared
+mkdir -p /var/lib/lxc/{proxy01,storage0{1..4}}/rootfs/shared
 mkdir -p /var/lib/lxc/shared
 
-for point in /var/lib/lxc/{proxy01,storage0{1..3}}/rootfs/shared; do 
+for point in /var/lib/lxc/{proxy01,storage0{1..4}}/rootfs/shared; do 
     if ( ! grep "$point" /etc/mtab ); then
 	mount /var/lib/lxc/shared $point -o bind; 
     fi
@@ -127,15 +127,14 @@ done
 
 #make "disks" for lxc containers
 mkdir -p /var/lib/swift
-for f in disk{1..7}; do 
+for f in disk{1..9}; do 
     if [ ! -e /var/lib/swift/$f ]; then
 	dd if=/dev/zero of=/var/lib/swift/$f count=0 bs=1024 seek=1000000
     fi
 done
 
 #configure iscsi to expose disks to localhost
-> /etc/iet/ietd.conf
-for i in {1..7}; do
+for i in {1..9}; do
     if ( ! grep -iq "storage\.disk$i" /etc/iet/ietd.conf ); then
 	echo "Target iqn.2011-05.swift.storage:storage.disk$i" >> /etc/iet/ietd.conf
 	echo "    Lun 0 Path=/var/lib/swift/disk$i,Type=fileio" >> /etc/iet/ietd.conf
@@ -153,7 +152,7 @@ iscsiadm -m discovery -t st -p 127.0.0.1
 
 /etc/init.d/open-iscsi restart
 
-for srv in storage0{1..3}; do
+for srv in storage0{1..4}; do
     ROOT=${LXCDIR}/${srv}/rootfs
     rm -f ${ROOT}/dev/sd{b,c}
 done
@@ -201,14 +200,28 @@ lxc.cgroup.devices.allow = b 8:97 rwm
 EOF
 fi
 
+mknod ${LXCDIR}/storage04/rootfs/dev/sdb b 8 112 # /dev/sdh
+mknod ${LXCDIR}/storage04/rootfs/dev/sdb1 b 8 113 # /dev/sdh1
+mknod ${LXCDIR}/storage04/rootfs/dev/sdc b 8 128 # /dev/sdi
+mknod ${LXCDIR}/storage04/rootfs/dev/sdc1 b 8 129 # /dev/sdi
+if ( ! grep -q "b 8:112" ${LXCDIR}/storage04/config ); then
+    cat >> ${LXCDIR}/storage04/config <<EOF
+# /dev/sd{a,b}
+lxc.cgroup.devices.allow = b 8:112 rwm
+lxc.cgroup.devices.allow = b 8:113 rwm
+lxc.cgroup.devices.allow = b 8:128 rwm
+lxc.cgroup.devices.allow = b 8:129 rwm
+EOF
+fi
+
 # Make the lxc containers autostart
 cat > /etc/default/lxc <<EOF
 RUN=yes
 CONF_DIR=/etc/lxc
-CONTAINERS="proxy01 storage01 storage02 storage03"
+CONTAINERS="proxy01 storage01 storage02 storage03 storage04"
 EOF
 
-for srv in proxy01 storage0{1..3}; do
+for srv in proxy01 storage0{1..4}; do
     rm -f /etc/lxc/${srv}.conf
     ln -s ${LXCDIR}/${srv}/config /etc/lxc/${srv}.conf 
 done
@@ -219,7 +232,7 @@ cat > /etc/firewall.conf <<EOF
 EOF
 
 # add a swift user
-for srv in proxy01 storage0{1..3}; do
+for srv in proxy01 storage0{1..4}; do
     # fix up keyring issues
     chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "apt-get -y --force-yes install ubuntu-keyring"
     chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "apt-get update"
@@ -271,7 +284,7 @@ echo "Starting LXC containers"
 sleep 10
 
 echo "Doing keyscan"
-ssh-keyscan -t rsa proxy01 storage0{1..3} > ${LXCDIR}/shared/.ssh/known_hosts
+ssh-keyscan -t rsa proxy01 storage0{1..4} > ${LXCDIR}/shared/.ssh/known_hosts
 
 echo "Setting up ssh and dsh"
 chown -R 500 ${LXCDIR}/shared
@@ -283,6 +296,7 @@ cat > ${LXCDIR}/shared/.dsh/group/storage <<EOF
 storage01
 storage02
 storage03
+storage04
 EOF
 
 echo "proxy01" > ${LXCDIR}/shared/.dsh/group/proxy
