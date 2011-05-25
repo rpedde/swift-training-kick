@@ -11,6 +11,9 @@ openssl req -new -x509 -nodes -out cert.crt -keyout cert.key
 # uncomment the SSL lines in the proxy-server.conf
 sed -i /etc/swift/proxy-server.conf -r -e 's/#(cert|key)/\1/'
 
+# switch the default cluster endpoint to https
+sed -i /etc/swift/proxy-server.conf -e 's/http:/https:/'
+
 # restart the proxy
 sudo swift-init proxy restart
 
