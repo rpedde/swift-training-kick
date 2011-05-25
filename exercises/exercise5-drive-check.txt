@@ -1,10 +1,13 @@
 # get the drive check script (is in tarball, but not in packages)
 
-cd /usr/bin
+cd
 sudo wget https://github.com/rpedde/swift-training-kick/raw/master/scripts/swift-drive-audit
 
+# copy the script to all the storage nodes
+dsh -g storage sudo cp ~/swift-drive-audit /usr/bin
+
 # make the config file
-cat > /etc/swift/drive-audit.conf <<EOF
+cat > ~/drive-audit.conf <<EOF
 [drive-audit]
 device_dir = /srv/node
 log_facility = LOG_LOCAL0
@@ -13,9 +16,14 @@ minutes = 60
 error_limit = 2
 EOF
 
+# copy the config to all the storage nodes
+dsh -g storage cp ~/drive-audit.conf /etc/swift
 
-# set up a cron job
-cat > /etc/cron.d/drive-audit <<EOF
+# make a cron.d job
+cat > ~/drive-audit <<EOF
 15 * * * * root /usr/bin/swift-drive-audit
 EOF
+
+# copy the cron job to all the storage nodes
+dsh -g storage sudo cp ~/drive-audit /etc/cron.d
 
