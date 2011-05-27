@@ -1,7 +1,10 @@
 # get the drive check script (is in tarball, but not in packages)
 
+# make sure we have wget installed
+sudo apt-get install -y wget
+
 cd
-sudo wget https://github.com/rpedde/swift-training-kick/raw/master/scripts/swift-drive-audit
+sudo wget --no-check-certificate https://github.com/rpedde/swift-training-kick/raw/master/scripts/swift-drive-audit
 
 # copy the script to all the storage nodes
 dsh -g storage sudo cp ~/swift-drive-audit /usr/bin
