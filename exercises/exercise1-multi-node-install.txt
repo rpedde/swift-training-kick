@@ -3,7 +3,7 @@ ALL NODES
 
 # set up the repos
 dsh -c -g all sudo apt-get install -y python-software-properties
-dsh -c -g all sudo add-apt-repository ppa:swift-core/ppa
+dsh -c -g all sudo add-apt-repository ppa:swift-core/release
 dsh -c -g all sudo apt-get update
 dsh -c -g all sudo mkdir /etc/swift
 dsh -c -g all sudo chown swift /etc/swift
