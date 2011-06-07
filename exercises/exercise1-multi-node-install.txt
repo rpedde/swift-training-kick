@@ -1,5 +1,7 @@
-ALL NODES
----------
+#!/bin/bash
+
+# ALL NODES
+# ---------
 
 # set up the repos
 dsh -c -g all sudo apt-get install -y python-software-properties
@@ -8,8 +10,8 @@ dsh -c -g all sudo apt-get update
 dsh -c -g all sudo mkdir /etc/swift
 dsh -c -g all sudo chown swift /etc/swift
 
-PROXY NODE
-----------
+# PROXY NODE
+# ----------
 
 # set up the swift.conf, including the hash suffix
 
