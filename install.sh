@@ -305,7 +305,7 @@ if [ ! -e ${LXCDIR}/shared/.ssh/id_rsa ]; then
 fi
 
 echo "Starting LXC containers"
-for d in proxy01 storage0{1..4}; do lxc-start $d; done
+for d in proxy01 storage0{1..4}; do lxc-start -n $d -d; done
 
 sleep 10
 
