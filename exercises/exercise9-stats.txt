@@ -46,9 +46,9 @@ sudo apt-get install -y wget
 # download all the files that *should* be in the official packages, but aren't :(
 mkdir ~/stats
 cd ~/stats
-wget --no-check-certificate https://github.com/rpedde/swift-training-kick/raw/master/scripts/swift-account-stats-logger
-wget --no-check-certificate https://github.com/rpedde/swift-training-kick/raw/master/scripts/swift-log-stats-collector
-wget --no-check-certificate https://github.com/rpedde/swift-training-kick/raw/master/scripts/swift-log-uploader
+wget --no-check-certificate https://raw.github.com/rpedde/swift-training-kick/master/scripts/swift-account-stats-logger
+wget --no-check-certificate https://raw.github.com/rpedde/swift-training-kick/master/scripts/swift-log-stats-collector
+wget --no-check-certificate https://raw.github.com/rpedde/swift-training-kick/master/scripts/swift-log-uploader
 
 # make them executable
 chmod +x ~/stats/*

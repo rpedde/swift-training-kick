@@ -343,7 +343,7 @@ EOF
 
 chmod +x /etc/network/if-up.d/firewall
 
-curl -skS https://github.com/rpedde/swift-training-kick/raw/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/proxy01/rootfs/root/install.sh
+curl -skS https://raw.github.com/rpedde/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/proxy01/rootfs/root/install.sh
 chmod +x ${LXCDIR}/proxy01/rootfs/root/install.sh
 
 echo "Done"
