@@ -4,8 +4,9 @@
 # ---------
 
 # set up the repos
-dsh -c -g all sudo apt-get install -y python-software-properties
-dsh -c -g all sudo add-apt-repository ppa:swift-core/release
+echo "deb http://crashsite.github.com/swift_debian/lucid lucid main" > /etc/apt/sources.list.d/swift.list
+echo "deb http://gholt.github.com/swauth/lucid lucid main" > /etc/apt/sources.list.d/swauth.list
+
 dsh -c -g all sudo apt-get update
 dsh -c -g all sudo mkdir /etc/swift
 dsh -c -g all sudo chown swift /etc/swift
@@ -15,7 +16,8 @@ dsh -c -g all sudo chown swift /etc/swift
 
 # set up the swift.conf, including the hash suffix
 
-sudo apt-get install -y swift
+sudo apt-get install -y --force-yes swift
+sudo apt-get install -y --force-yes swauth
 
 cat >/etc/swift/swift.conf <<EOF
 [swift-hash]
@@ -51,7 +53,7 @@ use = egg:swift#proxy
 allow_account_management = true
 
 [filter:swauth]
-use = egg:swift#swauth
+use = egg:swauth#swauth
 default_swift_cluster = local#http://192.168.254.11:8080/v1
 # Highly recommended to change this key to something else!
 super_admin_key = swauthkey
