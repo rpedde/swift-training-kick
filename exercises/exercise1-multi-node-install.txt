@@ -17,7 +17,7 @@ dsh -c -g all sudo chown swift /etc/swift
 # set up the swift.conf, including the hash suffix
 
 sudo apt-get install -y --force-yes swift
-sudo apt-get install -y --force-yes swauth
+sudo apt-get install -y --force-yes python-swauth swauth-doc
 
 cat >/etc/swift/swift.conf <<EOF
 [swift-hash]
