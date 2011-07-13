@@ -70,7 +70,7 @@ fi
 apt-get update
 
 # fix up missing asm-offsets.h
-apt-get install -y  linux-headers-`uname -r` gawk
+apt-get install -y  linux-headers-`uname -r` gawk emacs23-nox
 
 if [ ! -e /usr/src/linux-headers-`uname -r`/include/asm ]; then 
     ln -nsf /usr/src/linux-headers-`uname -r`/include/asm-x86 /usr/src/linux-headers-`uname -r`/include/asm
