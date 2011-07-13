@@ -262,11 +262,11 @@ done
 # add a swift user
 for srv in proxy01 storage0{1..4}; do
     # fix up keyring issues
-    cat > ${LXCDIR}/${srv}/rootfs/etc/apt.source.list.d/swift.list <<EOF
+    cat > ${LXCDIR}/${srv}/rootfs/etc/apt/source.list.d/swift.list <<EOF
 deb http://crashsite.github.com/swift_debian/lucid lucid main
 EOF
 
-    cat > ${LXCDIR}/${srv}/rootfs/etc/apt.source.list.d/swauth.list <<EOF
+    cat > ${LXCDIR}/${srv}/rootfs/etc/apt/source.list.d/swauth.list <<EOF
 deb http://gholt.github.com/swauth/lucid lucid main
 EOF
 
@@ -316,7 +316,8 @@ fi
 
 echo "Starting LXC containers"
 sleep 10
-for d in proxy01 storage0{1..4}; do lxc-start -n $d -d; done
+/etc/init.d/lxc stop
+/etc/init.d/lxc start
 sleep 10
 
 echo "Doing keyscan"
@@ -353,8 +354,8 @@ EOF
 
 chmod +x /etc/network/if-up.d/firewall
 
-curl -skS https://raw.github.com/rpedde/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/proxy01/rootfs/tmp/install.sh
-chmod +x ${LXCDIR}/proxy01/rootfs/tmp/install.sh
+curl -skS https://raw.github.com/rpedde/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/shared/install.sh
+chmod +x ${LXCDIR}/shared/install.sh
 
 echo "Done"
 
