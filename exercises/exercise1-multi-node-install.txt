@@ -4,8 +4,8 @@
 # ---------
 
 # set up the repos
-echo "deb http://crashsite.github.com/swift_debian/lucid lucid main" > /etc/apt/sources.list.d/swift.list
-echo "deb http://gholt.github.com/swauth/lucid lucid main" > /etc/apt/sources.list.d/swauth.list
+echo "deb http://crashsite.github.com/swift_debian/lucid lucid main" | sudo tee /etc/apt/sources.list.d/swift.list
+echo "deb http://gholt.github.com/swauth/lucid lucid main" | sudo tee /etc/apt/sources.list.d/swauth.list
 
 dsh -c -g all sudo apt-get update
 dsh -c -g all sudo mkdir /etc/swift
