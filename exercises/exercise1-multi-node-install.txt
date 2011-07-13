@@ -30,7 +30,7 @@ cp /etc/swift/swift.conf ~
 dsh -c -g storage cp ~/swift.conf /etc/swift
 
 # install swift proxy and memcached
-sudo apt-get install -y swift-proxy memcached
+sudo apt-get install -y --force-yes swift-proxy memcached
 
 # make memcache listen on all interfaces
 sudo sed -i /etc/memcached.conf -e 's/127.0.0.1/0.0.0.0/g'
@@ -98,7 +98,7 @@ dsh -c -g storage cp ~/*gz /etc/swift
 sudo swift-init proxy start
 
 # Install software on storage nodes
-dsh -c -g storage sudo apt-get install -y swift-account swift-container swift-object xfsprogs parted
+dsh -c -g storage sudo apt-get install -y --force-yes swift-account swift-container swift-object xfsprogs parted
 
 dsh -c -g storage sudo parted /dev/sdb mklabel msdos yes
 dsh -c -g storage sudo parted /dev/sdb mkpart primary xfs 1M 100% yes
