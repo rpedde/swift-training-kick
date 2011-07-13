@@ -315,8 +315,8 @@ if [ ! -e ${LXCDIR}/shared/.ssh/id_rsa ]; then
 fi
 
 echo "Starting LXC containers"
+sleep 10
 for d in proxy01 storage0{1..4}; do lxc-start -n $d -d; done
-
 sleep 10
 
 echo "Doing keyscan"
