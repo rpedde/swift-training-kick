@@ -67,6 +67,8 @@ if ( ! grep -iq "192\.168\.254\.11" /etc/hosts ); then
     done >> /etc/hosts
 fi
 
+apt-get update
+
 # fix up missing asm-offsets.h
 apt-get install -y  linux-headers-`uname -r` gawk
 
