@@ -262,11 +262,11 @@ done
 # add a swift user
 for srv in proxy01 storage0{1..4}; do
     # fix up keyring issues
-    cat > ${LXCDIR}/${srv}/rootfs/etc/apt/source.list.d/swift.list <<EOF
+    cat > ${LXCDIR}/${srv}/rootfs/etc/apt/sources.list.d/swift.list <<EOF
 deb http://crashsite.github.com/swift_debian/lucid lucid main
 EOF
 
-    cat > ${LXCDIR}/${srv}/rootfs/etc/apt/source.list.d/swauth.list <<EOF
+    cat > ${LXCDIR}/${srv}/rootfs/etc/apt/sources.list.d/swauth.list <<EOF
 deb http://gholt.github.com/swauth/lucid lucid main
 EOF
 
