@@ -21,9 +21,9 @@ EOF
 chmod 600 /etc/swift/stats.conf
 
 # populate the stats information (this will take some time)
-swift-stats-populate -d
+swift-dispersion-populate
 
 # run the dispersion report
-swift-stats-report -d
+swift-dispersion-report
 
 
