@@ -12,6 +12,7 @@ parser.add_option("-u", "--username", dest="username", default=None)
 parser.add_option("-k", "--key", dest="key", default = None)
 parser.add_option("-n", "--number", dest="number", type="int", default=1)
 parser.add_option("-o", "--offset", dest="offset", type="int", default=1)
+parser.add_option("-a", "--auth-url", dest="auth_url", default="https://auth.api.rackspacecloud.com/v1.0")
 
 (options,args) = parser.parse_args()
 config_hash = {}
@@ -25,9 +26,10 @@ else:
 
     config_hash['username'] = options.username
     config_hash['key'] = options.key
+    config_hash['auth_url'] = options.auth_url
 
 try:
-    cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'])
+    cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'], auth_url=options.auth_url)
     cs.authenticate()
 except Exception:
     # doesn't throw cloudservers.Unauthorized.  Sometimes it just
