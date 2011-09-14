@@ -29,7 +29,7 @@ else:
     config_hash['auth_url'] = options.auth_url
 
 try:
-    cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'], auth_url=options.auth_url)
+    cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'], auth_url=config_hash['auth_url'])
     cs.authenticate()
 except Exception:
     # doesn't throw cloudservers.Unauthorized.  Sometimes it just
@@ -52,7 +52,7 @@ if not flavor and not image:
 for x in range(options.offset,options.offset + options.number):
     hostname = "training-%03d" % (x,)
     print "Kicking host %s" % (hostname, ),
-    
+
     crond="* * * * * root /bin/bash /root/install.sh\n"
     root_install='#!/bin/bash\nrm -f /etc/cron.d/firstboot\napt-get install -y curl\ncurl -skS https://raw.github.com/rpedde/swift-training-kick/master/install.sh | /bin/bash\n\n'
 
