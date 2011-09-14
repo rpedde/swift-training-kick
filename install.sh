@@ -370,7 +370,7 @@ chmod +x /etc/network/if-up.d/firewall
 curl -skS https://raw.github.com/rpedde/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/shared/install.sh
 chmod +x ${LXCDIR}/shared/install.sh
 
-/etc/init.d/lxc start
+sudo /etc/init.d/lxc start
 
 echo "Done"
 
