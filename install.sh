@@ -23,8 +23,8 @@ cat > /etc/firewall.conf <<EOF
 :PREROUTING ACCEPT [7:368]
 :OUTPUT ACCEPT [661:41416]
 :POSTROUTING ACCEPT [94:5736]
--A POSTROUTING -o eth0 -j MASQUERADE 
--A PREROUTING -i eth0 -p tcp -m tcp --dport 22 -j DNAT --to-destination 192.168.254.11:22 
+-A POSTROUTING -o eth0 -j MASQUERADE
+-A PREROUTING -i eth0 -p tcp -m tcp --dport 22 -j DNAT --to-destination 192.168.254.11:22
 -A PREROUTING -i eth0 -p tcp -m tcp --dport 2222 -j REDIRECT --to-port 22
 -A PREROUTING -i eth0 -p tcp -m tcp --dport 8080 -j DNAT --to-destination 192.168.254.11:8080
 COMMIT
@@ -34,12 +34,12 @@ COMMIT
 :INPUT DROP [191:14516]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [67625:4590809]
--A INPUT -i lo -j ACCEPT 
--A INPUT -d 127.0.0.0/8 ! -i lo -j REJECT --reject-with icmp-port-unreachable 
--A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT 
+-A INPUT -i lo -j ACCEPT
+-A INPUT -d 127.0.0.0/8 ! -i lo -j REJECT --reject-with icmp-port-unreachable
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -m tcp -p tcp --dport 22 -j ACCEPT
 -A INPUT -m tcp -p tcp --dport 2222 -j ACCEPT
--A INPUT -s 192.168.254.0/22 -j ACCEPT 
+-A INPUT -s 192.168.254.0/22 -j ACCEPT
 COMMIT
 # Completed on Sun May 22 22:29:06 2011
 EOF
@@ -61,7 +61,7 @@ if ( ! grep -iq "192\.168\.254\.11" /etc/hosts ); then
     echo >> /etc/hosts
     echo '#swift lab hosts' >> /etc/hosts
     i=11
-    for srv in proxy01 storage0{1..4}; do 
+    for srv in proxy01 storage0{1..4}; do
 	echo 192.168.254.$i $srv $srv.swift
 	i=$[ i + 1 ]
     done >> /etc/hosts
@@ -72,7 +72,7 @@ apt-get update
 # fix up missing asm-offsets.h
 apt-get install -y  linux-headers-`uname -r` gawk emacs23-nox
 
-if [ ! -e /usr/src/linux-headers-`uname -r`/include/asm ]; then 
+if [ ! -e /usr/src/linux-headers-`uname -r`/include/asm ]; then
     ln -nsf /usr/src/linux-headers-`uname -r`/include/asm-x86 /usr/src/linux-headers-`uname -r`/include/asm
 fi
 
@@ -152,15 +152,15 @@ done
 mkdir -p /var/lib/lxc/{proxy01,storage0{1..4}}/rootfs/shared
 mkdir -p /var/lib/lxc/shared
 
-for point in /var/lib/lxc/{proxy01,storage0{1..4}}/rootfs/shared; do 
+for point in /var/lib/lxc/{proxy01,storage0{1..4}}/rootfs/shared; do
     if ( ! grep "$point" /etc/mtab ); then
-	mount /var/lib/lxc/shared $point -o bind; 
+	mount /var/lib/lxc/shared $point -o bind;
     fi
 done
 
 #make "disks" for lxc containers
 mkdir -p /var/lib/swift
-for f in disk{1..9}; do 
+for f in disk{1..9}; do
     if [ ! -e /var/lib/swift/$f ]; then
 	dd if=/dev/zero of=/var/lib/swift/$f count=0 bs=1024 seek=1000000
     fi
@@ -256,7 +256,7 @@ EOF
 
 for srv in proxy01 storage0{1..4}; do
     rm -f /etc/lxc/${srv}.conf
-    ln -s ${LXCDIR}/${srv}/config /etc/lxc/${srv}.conf 
+    ln -s ${LXCDIR}/${srv}/config /etc/lxc/${srv}.conf
 done
 
 # add a swift user
@@ -317,6 +317,9 @@ fi
 echo "Starting LXC containers"
 sleep 10
 /etc/init.d/lxc stop
+
+find ${LXCDIR} -name "udev*conf" -exec rm {} \;
+
 /etc/init.d/lxc start
 sleep 10
 
