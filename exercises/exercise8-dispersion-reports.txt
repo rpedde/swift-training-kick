@@ -2,8 +2,8 @@
 swauth-add-user -A http://localhost:8080/auth/ -K swauthkey -a dispersion root secret
 
 # Make the config file (see /usr/share/doc/swift/stats.conf-sample)
-cat > /etc/swift/stats.conf <<EOF
-[stats]
+cat > /etc/swift/dispersion.conf <<EOF
+[dispersion]
 auth_url=http://localhost:8080/auth/v1.0
 auth_user=dispersion:root
 auth_key=secret
@@ -13,12 +13,12 @@ auth_key=secret
 # object_put_count = 1000
 # big_container_count = 1000000
 # retries = 5
-concurrency = 50
+concurrency = 4
 # csv_output = /etc/swift/stats.csv
 EOF
 
 # set permissions
-chmod 600 /etc/swift/stats.conf
+chmod 600 /etc/swift/dispersion.conf
 
 # populate the stats information (this will take some time)
 swift-dispersion-populate

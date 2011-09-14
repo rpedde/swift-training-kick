@@ -1,28 +1,29 @@
 # can the test2 user download the test file?
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass download testcontainer test.txt -o -
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass download testcontainer test.txt -o -
 
 # What are the current ACLs on the container 'testcontainer'
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass stat testcontainer
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass stat testcontainer
 
 # What does imply about default (empty) acls?
 
 # add an acl to allow test2 to read the file
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass post testcontainer -r ".r:*"
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass post testcontainer -r ".r:*"
 
 # view the ACLs now, and verify it was applied
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass stat testcontainer
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass stat testcontainer
 
 # Can the test2 user view the test file now?
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass download testcontainer test.txt -o -
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass download testcontainer test.txt -o -
 
 # Can the test2 user write a new file to the container?
 cp test.txt test2.txt
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass upload testcontainer test2.txt
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass upload testcontainer test2.txt
 
 # set the acls so that the test2 user can write to it (not world writable)
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass post testcontainer -w "testaccount:test2"
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass post testcontainer -w "testaccount:test2"
 
 # Now can the test2 user write to the file?
-st -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass upload	testcontainer test2.txt
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K
+test2pass upload testcontainer test2.txt
 
 

@@ -14,7 +14,7 @@ curl -k -v -H 'X-Storage-User: testaccount:test1' -H 'X-Storage-Pass:test1pass' 
 # pull the X-Auth-Token and X-Storage-URL out
 curl -k -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
 
-# This is the same as the st command "stat"
-st -A http://localhost:8080/auth/v1.0 -U testaccount:test1 -K test1pass stat
+# This is the same as the swift command "stat"
+swift -A http://localhost:8080/auth/v1.0 -U testaccount:test1 -K test1pass stat
 
 

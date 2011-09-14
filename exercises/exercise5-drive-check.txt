@@ -1,14 +1,3 @@
-# get the drive check script (is in tarball, but not in packages)
-
-# make sure we have wget installed
-sudo apt-get install -y wget
-
-cd
-sudo wget --no-check-certificate https://raw.github.com/rpedde/swift-training-kick/master/scripts/swift-drive-audit
-
-# copy the script to all the storage nodes
-dsh -g storage sudo cp ~/swift-drive-audit /usr/bin
-
 # make the config file
 cat > ~/drive-audit.conf <<EOF
 [drive-audit]
@@ -24,7 +13,7 @@ dsh -g storage cp ~/drive-audit.conf /etc/swift
 
 # make a cron.d job
 cat > ~/drive-audit <<EOF
-15 * * * * root /usr/bin/swift-drive-audit
+15 * * * * root /usr/bin/swift-drive-audit /etc/swift/drive-audit.conf
 EOF
 
 # copy the cron job to all the storage nodes

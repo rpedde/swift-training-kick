@@ -22,14 +22,14 @@ swauth-list -A https://localhost:8080/auth/ -K swauthkey
 
 # need to change the endpoint from http to https
 # swauth-list -A https://localhost:8080/auth/ -K swauthkey testaccount
-#{"services": {"storage": {"default": "local", "local": "http://192.168.254.11:8080/v1/AUTH_9616dc78-08c9-4d26-a1bc-e10dd2102dff"}}, 
+#{"services": {"storage": {"default": "local", "local": "http://192.168.254.11:8080/v1/AUTH_9616dc78-08c9-4d26-a1bc-e10dd2102dff"}},
 # "account_id": "AUTH_9616dc78-08c9-4d26-a1bc-e10dd2102dff", "users": [{"name": "test1"}, {"name": "test2"}]}
 #
 # Change the endpoint from http to https, based on the endpoint returned
 swauth-set-account-service -A https://localhost:8080/auth/ -K swauthkey testaccount storage local https://<from above>
 
 # verify the user now works with https
-st -A https://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass list
+swift -A https://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass list
 
 
 
