@@ -6,7 +6,8 @@ set > /tmp/environment
 [ -e /root/.profile ] && . /root/.profile
 [ -e /root/.bash_profile ] && . /root/.bash_profile
 
-set > /tmp/environment.new
+export USER=root
+export PWD=`pwd`
 
 if [ -e /tmp/firstboot.local ]; then
     mv /tmp/firstboot.local /tmp/firstboot.old
@@ -17,7 +18,7 @@ exec 2>&1
 
 LXCDIR=/var/lib/lxc
 
-export PATH=/bin:/usr/bin:/usr/sbin:/sbin
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
 
 #many parts of this flagrantly stolen from http://www.stgraber.org/2011/05/04/state-of-lxc-in-ubuntu-natty/
 
