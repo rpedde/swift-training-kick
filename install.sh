@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +x
+set -x
 
 if [ -e /tmp/firstboot.local ]; then
     mv /tmp/firstboot.local /tmp/firstboot.old
@@ -320,9 +320,10 @@ sleep 10
 
 find ${LXCDIR} -name "udev*conf" -exec rm {} \;
 
-sleep 20
+sleep 10
 
-/etc/init.d/lxc start
+for d in proxy01 storage0{1..4}; do lxc-start -n ${d} -d; done
+
 sleep 10
 
 echo "Doing keyscan"
