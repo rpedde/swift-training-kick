@@ -4,16 +4,16 @@ import json
 import sys
 import traceback
 
-import cloudservers
+import openstack.compute
 from optparse import OptionParser
 
 parser = OptionParser()
 parser.add_option("-c", "--configfile", dest="configfile", default=None)
 parser.add_option("-u", "--username", dest="username", default=None)
-parser.add_option("-k", "--key", dest="key", default = None)
+parser.add_option("-k", "--key", dest="apikey", default=None)
 parser.add_option("-n", "--number", dest="number", type="int", default=1)
 parser.add_option("-o", "--offset", dest="offset", type="int", default=1)
-parser.add_option("-a", "--auth-url", dest="auth_url", default="https://auth.api.rackspacecloud.com/v1.0")
+parser.add_option("-a", "--auth-url", dest="auth_url", default=None)
 
 (options,args) = parser.parse_args()
 config_hash = {}
@@ -26,18 +26,11 @@ else:
         sys.exit()
 
 # command line overrides conf and defaults
-
 for opt,value in options.__dict__.items():
     if value:
         config_hash[opt] = value
 
-try:
-    cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'], auth_url=config_hash['auth_url'])
-except TypeError:
-    print "You have a non-endpoint configurable cloudservers.  Try\n" \
-          "github.com/chmouel/python-cloudservers\n\nAuthing against " \
-          "US endpoint.\n\n"
-    cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'])
+cs = openstack.compute.Compute(**config_hash)
 
 try:
     cs.authenticate()
