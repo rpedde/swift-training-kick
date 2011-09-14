@@ -320,6 +320,8 @@ sleep 10
 
 find ${LXCDIR} -name "udev*conf" -exec rm {} \;
 
+sleep 20
+
 /etc/init.d/lxc start
 sleep 10
 
