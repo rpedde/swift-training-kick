@@ -2,6 +2,7 @@
 
 import json
 import sys
+import traceback
 
 import cloudservers
 from optparse import OptionParser
@@ -24,18 +25,28 @@ else:
         print "Must either pass --configfile or --username and --key options"
         sys.exit()
 
-    config_hash['username'] = options.username
-    config_hash['key'] = options.key
-    config_hash['auth_url'] = options.auth_url
+# command line overrides conf and defaults
+
+for opt,value in options.__dict__.items():
+    if value:
+        config_hash[opt] = value
 
 try:
     cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'], auth_url=config_hash['auth_url'])
+except TypeError:
+    print "You have a non-endpoint configurable cloudservers.  Try\n" \
+          "github.com/chmouel/python-cloudservers\n\nAuthing against " \
+          "US endpoint.\n\n"
+    cs = cloudservers.CloudServers(config_hash['username'], config_hash['key'])
+
+try:
     cs.authenticate()
 except Exception:
-    # doesn't throw cloudservers.Unauthorized.  Sometimes it just
-    # pukes with json ValueErrors
-    print "Can't connect to cloud sites.  Check connection and config file"
-    sys.exit()
+     # doesn't throw cloudservers.Unauthorized.  Sometimes it just
+     # pukes with json ValueErrors
+     print "Can't connect to cloud sites.  Check connection and config file"
+     traceback.print_exc()
+     sys.exit()
 
 # find the image we want to load
 
