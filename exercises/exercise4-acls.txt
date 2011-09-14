@@ -23,7 +23,6 @@ swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass uplo
 swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test1 -K test1pass post testcontainer -w "testaccount:test2"
 
 # Now can the test2 user write to the file?
-swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K
-test2pass upload testcontainer test2.txt
+swift -A http://localhost:8080/auth/v1.0/ -U testaccount:test2 -K test2pass upload testcontainer test2.txt
 
 
