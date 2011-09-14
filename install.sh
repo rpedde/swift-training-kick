@@ -2,6 +2,12 @@
 
 set -x
 
+set > /tmp/environment
+[ -e /root/.profile ] && . /root/.profile
+[ -e /root/.bash_profile ] && . /root/.bash_profile
+
+set > /tmp/environment.new
+
 if [ -e /tmp/firstboot.local ]; then
     mv /tmp/firstboot.local /tmp/firstboot.old
 fi
