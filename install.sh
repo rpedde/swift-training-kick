@@ -297,6 +297,9 @@ EOF
 	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "apt-get install -y rsyslog"
     fi
 
+    if [ ! -e ${LXCDIR}/${srv}/rootfs/usr/bin/curl ]; then
+	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "apt-get install -y curl"
+    fi
 
     # add a swift user
     PWHASH=`echo "Swift^pw" | makepasswd --clearfrom=- --crypt-md5 | awk '{print $2}'`
