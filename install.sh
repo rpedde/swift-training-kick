@@ -216,7 +216,7 @@ mknod ${LXCDIR}/storage02/rootfs/dev/sdb b 8 48 # /dev/sdd
 mknod ${LXCDIR}/storage02/rootfs/dev/sdb1 b 8 49 # /dev/sdd1
 mknod ${LXCDIR}/storage02/rootfs/dev/sdc b 8 64 # /dev/sde
 mknod ${LXCDIR}/storage02/rootfs/dev/sdc1 b 8 65 # /dev/sde1
-if ( ! grep -q "b 8:32" ${LXCDIR}/storage02/config ); then
+if ( ! grep -q "b 8:48" ${LXCDIR}/storage02/config ); then
     cat >> ${LXCDIR}/storage02/config <<EOF
 # /dev/sd{a,b}
 lxc.cgroup.devices.allow = b 8:48 rwm
@@ -230,7 +230,7 @@ mknod ${LXCDIR}/storage03/rootfs/dev/sdb b 8 80 # /dev/sdf
 mknod ${LXCDIR}/storage03/rootfs/dev/sdb1 b 8 81 # /dev/sdf1
 mknod ${LXCDIR}/storage03/rootfs/dev/sdc b 8 96 # /dev/sdg
 mknod ${LXCDIR}/storage03/rootfs/dev/sdc1 b 8 97 # /dev/sdg
-if ( ! grep -q "b 8:64" ${LXCDIR}/storage03/config ); then
+if ( ! grep -q "b 8:80" ${LXCDIR}/storage03/config ); then
     cat >> ${LXCDIR}/storage03/config <<EOF
 # /dev/sd{a,b}
 lxc.cgroup.devices.allow = b 8:80 rwm
