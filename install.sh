@@ -322,6 +322,8 @@ mkdir -p ${LXCDIR}/shared/.ssh
 if [ ! -e ${LXCDIR}/shared/.ssh/id_rsa ]; then
     ssh-keygen -N '' -f ${LXCDIR}/shared/.ssh/id_rsa -t rsa -q
     cp ${LXCDIR}/shared/.ssh/id_rsa.pub ${LXCDIR}/shared/.ssh/authorized_keys
+    echo -e 'Host *\n\tStrictHostKeyChecking no' > ${LXCDIR}/shared/.ssh/config
+    chmod 600 ${LXCDIR}/shared/.ssh/config
 fi
 
 echo "Starting LXC containers"
