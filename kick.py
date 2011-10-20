@@ -14,6 +14,7 @@ parser.add_option("-k", "--key", dest="api_key", default=None)
 parser.add_option("-n", "--number", dest="number", type="int", default=1)
 parser.add_option("-o", "--offset", dest="offset", type="int", default=1)
 parser.add_option("-a", "--auth-url", dest="auth_url", default=None)
+parser.add_option("-g", "--git-url", dest="git_url", default="https://raw.github.com/rpedde")
 
 (options, args) = parser.parse_args()
 config_hash = {}
@@ -62,8 +63,7 @@ for x in range(options.offset, options.offset + options.number):
     print "Kicking host %s" % (hostname, ),
 
     crond = "* * * * * root /bin/bash /root/install.sh\n"
-    root_install = '#!/bin/bash\nrm -f /etc/cron.d/firstboot\napt-get install -y curl\ncurl -skS https://raw.github.com/rpedde/swift-training-kick/master/install.sh | /bin/bash\n\n'
-
+    root_install = '#!/bin/bash\nrm -f /etc/cron.d/firstboot\napt-get install -y curl\nexport GIT_URL='+options.git_url+'/swift-training-kick/master/install.sh\ncurl -skS $GIT_URL | /bin/bash\n\n'
     s = cs.servers.create(hostname, image.id, flavor.id, files={
         "/etc/cron.d/firstboot": crond,
         "/root/install.sh": root_install,
