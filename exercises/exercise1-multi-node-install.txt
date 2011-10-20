@@ -65,20 +65,22 @@ memcache_servers = 192.168.254.11:11211
 EOF
 
 # build the rings
+# defaults tuple for ring creation is 18,3,1.  2^18 power for num_parts is
+# too large and heavy to run on the cloud servers.  Set it to 2^9 instead.
 cd /etc/swift
-swift-ring-builder account.builder create 18 3 1 
+swift-ring-builder account.builder create 9 3 1 
 swift-ring-builder account.builder add z1-192.168.254.12:6002/sdb1 1000
 swift-ring-builder account.builder add z2-192.168.254.13:6002/sdb1 1000
 swift-ring-builder account.builder add z3-192.168.254.14:6002/sdb1 1000
 swift-ring-builder account.builder add z4-192.168.254.15:6002/sdb1 1000
 
-swift-ring-builder container.builder create 18 3 1 
+swift-ring-builder container.builder create 9 3 1 
 swift-ring-builder container.builder add z1-192.168.254.12:6001/sdb1 1000
 swift-ring-builder container.builder add z2-192.168.254.13:6001/sdb1 1000
 swift-ring-builder container.builder add z3-192.168.254.14:6001/sdb1 1000
 swift-ring-builder container.builder add z4-192.168.254.15:6001/sdb1 1000
 
-swift-ring-builder object.builder create 18 3 1 
+swift-ring-builder object.builder create 9 3 1 
 swift-ring-builder object.builder add z1-192.168.254.12:6000/sdb1 1000
 swift-ring-builder object.builder add z2-192.168.254.13:6000/sdb1 1000
 swift-ring-builder object.builder add z3-192.168.254.14:6000/sdb1 1000
