@@ -186,6 +186,8 @@ use = egg:swift#container
 [container-updater]
 
 [container-auditor]
+
+[container-sync]
 EOF
 
 cat > ~/object-server.conf <<EOF
