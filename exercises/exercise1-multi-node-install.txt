@@ -39,7 +39,7 @@ cat >/etc/swift/proxy-server.conf <<EOF
 #cert_file = /etc/swift/cert.crt
 #key_file = /etc/swift/cert.key
 bind_port = 8080
-workers = 8
+workers = 1
 user = swift
 
 [pipeline:main]
@@ -65,19 +65,19 @@ EOF
 
 # build the rings
 cd /etc/swift
-swift-ring-builder account.builder create 18 3 1 
+swift-ring-builder account.builder create 9 3 1 
 swift-ring-builder account.builder add z1-192.168.254.12:6002/sdb1 1000
 swift-ring-builder account.builder add z2-192.168.254.13:6002/sdb1 1000
 swift-ring-builder account.builder add z3-192.168.254.14:6002/sdb1 1000
 swift-ring-builder account.builder add z4-192.168.254.15:6002/sdb1 1000
 
-swift-ring-builder container.builder create 18 3 1 
+swift-ring-builder container.builder create 9 3 1 
 swift-ring-builder container.builder add z1-192.168.254.12:6001/sdb1 1000
 swift-ring-builder container.builder add z2-192.168.254.13:6001/sdb1 1000
 swift-ring-builder container.builder add z3-192.168.254.14:6001/sdb1 1000
 swift-ring-builder container.builder add z4-192.168.254.15:6001/sdb1 1000
 
-swift-ring-builder object.builder create 18 3 1 
+swift-ring-builder object.builder create 9 3 1 
 swift-ring-builder object.builder add z1-192.168.254.12:6000/sdb1 1000
 swift-ring-builder object.builder add z2-192.168.254.13:6000/sdb1 1000
 swift-ring-builder object.builder add z3-192.168.254.14:6000/sdb1 1000

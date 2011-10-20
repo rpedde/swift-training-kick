@@ -6,6 +6,12 @@ set > /tmp/environment
 [ -e /root/.profile ] && . /root/.profile
 [ -e /root/.bash_profile ] && . /root/.bash_profile
 
+if [ -z $GIT_URL ]; then
+	echo "no git url found" >> /tmp/git_status
+else
+	echo "GIT_URL used: $GIT_URL" >> /tmp/git_status
+fi
+
 export USER=root
 export PWD=`pwd`
 
@@ -372,7 +378,7 @@ EOF
 
 chmod +x /etc/network/if-up.d/firewall
 
-curl -skS https://raw.github.com/rpedde/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/shared/install.sh
+curl -skS $GIT_URL/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/shared/install.sh
 chmod +x ${LXCDIR}/shared/install.sh
 
 sudo /etc/init.d/lxc start
