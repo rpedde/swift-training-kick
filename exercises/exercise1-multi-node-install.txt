@@ -158,7 +158,7 @@ dsh -c -g storage 'ps auxw | grep rsyn[c]'
 cat > ~/account-server.conf <<EOF
 [DEFAULT]
 bind_ip = 0.0.0.0
-workers = 2
+workers = 1
 
 [pipeline:main]
 pipeline = account-server
@@ -176,7 +176,7 @@ EOF
 cat > ~/container-server.conf <<EOF
 [DEFAULT]
 bind_ip = 0.0.0.0
-workers = 2
+workers = 1
 
 [pipeline:main]
 pipeline = container-server
@@ -196,7 +196,7 @@ EOF
 cat > ~/object-server.conf <<EOF
 [DEFAULT]
 bind_ip = 0.0.0.0
-workers = 2
+workers = 1
 
 [pipeline:main]
 pipeline = object-server
