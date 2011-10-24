@@ -1,10 +1,10 @@
 # Create an account for dispersion reports
-swauth-add-user -A http://localhost:8080/auth/ -K swauthkey -a dispersion root secret
+swauth-add-user -A https://localhost:8080/auth/ -K swauthkey -a dispersion root secret
 
 # Make the config file (see /usr/share/doc/swift/stats.conf-sample)
 cat > /etc/swift/dispersion.conf <<EOF
 [dispersion]
-auth_url=http://localhost:8080/auth/v1.0
+auth_url=https://localhost:8080/auth/v1.0
 auth_user=dispersion:root
 auth_key=secret
 # swift_dir = /etc/swift
