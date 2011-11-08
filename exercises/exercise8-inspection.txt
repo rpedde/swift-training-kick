@@ -1,0 +1,17 @@
+# find the account id for a given account
+swauth-list -A http://localhost:8080/auth/ -K swauthkey testaccount
+
+# Get object
+swift-get-nodes /etc/swift/object.ring.gz <id> testcontainer test.txt
+
+# Inspect object on the file system
+ssh <node> "swift-object-info /srv/node/sdb1/objects/<.....>"
+
+# Audit an Account
+swift-account-audit <id>
+
+# Do a deep inspection by downloading the file and checking its MD5.
+swift-account-audit -d <id>
+
+# Audit objects on a filesystem (why it may needed ?)
+ssh storage01 swift-object-auditor -v -o /etc/swift/object-server.conf
