@@ -314,6 +314,8 @@ EOF
 
     if ( ! grep -q "swift" ${LXCDIR}/${srv}/rootfs/etc/passwd ); then
 	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "adduser --system --home=/shared --shell=/bin/bash --no-create-home --uid=500 swift"
+	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "addgroup --system swift"
+	chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "adduser swift swift"
     fi
     chroot ${LXCDIR}/${srv}/rootfs /bin/bash -c "usermod -p '${PWHASH}' swift"
 
@@ -380,7 +382,7 @@ EOF
 
 chmod +x /etc/network/if-up.d/firewall
 
-curl -skS $GIT_URL/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/shared/install.sh
+curl -skS ${GIT_URL}/swift-training-kick/master/exercises/exercise1-multi-node-install.txt > ${LXCDIR}/shared/install.sh
 chmod +x ${LXCDIR}/shared/install.sh
 
 sudo /etc/init.d/lxc start
