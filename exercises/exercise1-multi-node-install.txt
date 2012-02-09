@@ -14,7 +14,6 @@ dsh -c -g all sudo chown swift /etc/swift
 # set up the swift.conf, including the hash suffix
 
 sudo apt-get install -y --force-yes swift
-sudo apt-get install -y --force-yes python-swauth swauth-doc
 
 cat >/etc/swift/swift.conf <<EOF
 [swift-hash]
@@ -28,6 +27,9 @@ dsh -c -g storage cp ~/swift.conf /etc/swift
 
 # install swift proxy and memcached
 sudo apt-get install -y --force-yes swift-proxy memcached
+
+# install swauth
+sudo apt-get install -y --force-yes python-swauth swauth-doc
 
 # make memcache listen on all interfaces
 sudo sed -i /etc/memcached.conf -e 's/127.0.0.1/0.0.0.0/g'
@@ -68,19 +70,19 @@ EOF
 # defaults tuple for ring creation is 18,3,1.  2^18 power for num_parts is
 # too large and heavy to run on the cloud servers.  Set it to 2^9 instead.
 cd /etc/swift
-swift-ring-builder account.builder create 9 3 1 
+swift-ring-builder account.builder create 9 3 1
 swift-ring-builder account.builder add z1-192.168.254.12:6002/sdb1 1000
 swift-ring-builder account.builder add z2-192.168.254.13:6002/sdb1 1000
 swift-ring-builder account.builder add z3-192.168.254.14:6002/sdb1 1000
 swift-ring-builder account.builder add z4-192.168.254.15:6002/sdb1 1000
 
-swift-ring-builder container.builder create 9 3 1 
+swift-ring-builder container.builder create 9 3 1
 swift-ring-builder container.builder add z1-192.168.254.12:6001/sdb1 1000
 swift-ring-builder container.builder add z2-192.168.254.13:6001/sdb1 1000
 swift-ring-builder container.builder add z3-192.168.254.14:6001/sdb1 1000
 swift-ring-builder container.builder add z4-192.168.254.15:6001/sdb1 1000
 
-swift-ring-builder object.builder create 9 3 1 
+swift-ring-builder object.builder create 9 3 1
 swift-ring-builder object.builder add z1-192.168.254.12:6000/sdb1 1000
 swift-ring-builder object.builder add z2-192.168.254.13:6000/sdb1 1000
 swift-ring-builder object.builder add z3-192.168.254.14:6000/sdb1 1000
