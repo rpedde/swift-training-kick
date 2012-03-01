@@ -63,7 +63,7 @@ for x in range(options.offset, options.offset + options.number):
     print "Kicking host %s" % (hostname, ),
 
     crond = "* * * * * root /bin/bash /root/install.sh\n"
-    root_install = '#!/bin/bash\nrm -f /etc/cron.d/firstboot\napt-get install -y curl\nexport GIT_URL='+options.git_url+'/swift-training-kick/master/install.sh\ncurl -skS $GIT_URL | /bin/bash\n\n'
+    root_install = '#!/bin/bash\nrm -f /etc/cron.d/firstboot\napt-get install -y curl\nexport GIT_URL='+options.git_url+'\ncurl -skS $GIT_URL/swift-training-kick/master/install.sh | /bin/bash\n\n'
     s = cs.servers.create(hostname, image.id, flavor.id, files={
         "/etc/cron.d/firstboot": crond,
         "/root/install.sh": root_install,
