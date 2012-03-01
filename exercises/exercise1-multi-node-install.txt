@@ -3,6 +3,9 @@
 # ALL NODES
 # ---------
 
+# swift packages now require a group called swift - add it
+dsh -c -g all sudo groupadd swift
+
 # set up the repos
 dsh -c -g all sudo apt-get update
 dsh -c -g all sudo mkdir /etc/swift
